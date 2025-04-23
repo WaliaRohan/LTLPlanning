@@ -22,24 +22,39 @@ with open('turtlebot3_world.yaml', 'r') as f:
 
 resolution = map_info['resolution']
 origin = map_info['origin']  # [x, y, yaw]
+
 points_world = np.zeros_like(points_px, dtype=np.float32)
 points_world[:, 0] = points_px[:, 0] * resolution + origin[0]
 points_world[:, 1] = (binary_map.shape[0] - points_px[:, 1]) * resolution + origin[1]
 
+# Subsample points
+num_samples = int(0.5 * len(points_world))
+indices = np.random.choice(len(points_world), num_samples, replace=False)
+points_world = points_world[indices]
+
 tri = Delaunay(points_world)
-plt.triplot(points_world[:, 0], points_world[:, 1], tri.simplices)
-plt.plot(points_world[:, 0], points_world[:, 1], '.', markersize=0.5)
+# --- Plotting ---
+# Prepare image as background
+extent = [
+    origin[0],
+    origin[0] + map_img.shape[1] * resolution,
+    origin[1],
+    origin[1] + map_img.shape[0] * resolution
+]
+
+plt.imshow(
+    np.flipud(map_img),  # flip vertically to match coordinate orientation
+    cmap='gray',
+    extent=extent,
+    origin='lower'
+)
+
+# Plot triangulation
+plt.triplot(points_world[:, 0], points_world[:, 1], tri.simplices, color='red', linewidth=0.3)
+plt.plot(points_world[:, 0], points_world[:, 1], '.', markersize=0.5, color='blue')
+
 plt.gca().set_aspect('equal')
+plt.title("Delaunay Triangulation Overlaid on Map")
 plt.show()
 
-
-# points = np.array([[0, 0], [0, 1.1], [1, 0], [1, 1]])
-# tri = Delaunay(points)
-
-# plt.triplot(points[:,0], points[:,1], tri.simplices)
-# plt.plot(points[:,0], points[:,1], 'o')
-# plt.show()
-
-# TODO How do we create vector fields from the output of delaunay?
-
-
+# Get Create vector fields for starting and ending point
