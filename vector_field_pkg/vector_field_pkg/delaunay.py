@@ -9,7 +9,7 @@ import cv2
 import yaml
 
 # Load Map
-map_img = cv2.imread('turtlebot3_world.pgm', cv2.IMREAD_GRAYSCALE)
+map_img = cv2.imread('../resource/turtlebot3_world.pgm', cv2.IMREAD_GRAYSCALE)
 binary_map = (map_img < 250).astype(np.uint8)  # 1 = occupied
 
 # Extract free space points
@@ -17,7 +17,7 @@ ys, xs = np.where(binary_map == 0)  # free pixels
 points_px = np.stack((xs, ys), axis=-1)  # (N, 2)
 
 # Image to world coords
-with open('turtlebot3_world.yaml', 'r') as f:
+with open('../resource/turtlebot3_world.yaml', 'r') as f:
     map_info = yaml.safe_load(f)
 
 resolution = map_info['resolution']
