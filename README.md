@@ -47,4 +47,5 @@ ros2 launch turtlebot3_gazebo turtlebot3_house.launch.py x_pose:=1.17 y_pose:=-0
 
 ros2 launch turtlebot3_navigation2 navigation2.launch.py   use_sim_time:=true   map:=/opt/ros/humble/share/turtlebot3_navigation2/map/map_house.yaml
 
-
+## LTL Planning Code
+This code is mean to make it easy to see the code added for the project, but the repo needed to run it is located here: https://github.com/cameronschloer/ts
